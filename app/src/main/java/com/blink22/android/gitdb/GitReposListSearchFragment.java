@@ -1,16 +1,24 @@
 package com.blink22.android.gitdb;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +26,8 @@ import retrofit2.Response;
 public class GitReposListSearchFragment extends Fragment {
     private static final String DEFAULT_SEARCH_QUERY = "android";
     private Call<ReposSearchResult> mSearchReposCall;
-    private SearchView mSearchView;
+    @BindView(R.id.repos_recycler_view)
+    RecyclerView mReposRecyclerView;
 
     public static GitReposListSearchFragment newInstance() {
         return new GitReposListSearchFragment();
@@ -31,13 +40,23 @@ public class GitReposListSearchFragment extends Fragment {
         setRetainInstance(true);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_git_repos_search,container, false);
+        ButterKnife.bind(this, view);
+        mReposRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return view;
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_git_repos_search, menu);
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
-        mSearchView = (SearchView) searchItem.getActionView();
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 QueryPreferences.setStoredQuery(getActivity(), query);
@@ -50,7 +69,7 @@ public class GitReposListSearchFragment extends Fragment {
                 return false;
             }
         });
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 QueryPreferences.setStoredQuery(getActivity(), null);
@@ -60,8 +79,9 @@ public class GitReposListSearchFragment extends Fragment {
         });
         String query = QueryPreferences.getStoredQuery(getActivity());
         if (query != null) {
-            mSearchView.setQuery(query, false);
-            mSearchView.setIconified(false);
+            searchView.setQuery(query, false);
+            searchView.setIconified(false);
+            fetchRepos(query);
         } else {
             fetchRepos(DEFAULT_SEARCH_QUERY);
         }
@@ -85,6 +105,8 @@ public class GitReposListSearchFragment extends Fragment {
         public void onResponse(Call<ReposSearchResult> call, Response<ReposSearchResult> response) {
             ReposSearchResult reposSearchResult = response.body();
             List<Repo> repos = reposSearchResult.getRepos();
+            RepoAdapter repoAdapter = new RepoAdapter(repos);
+            mReposRecyclerView.setAdapter(repoAdapter);
         }
 
         @Override
