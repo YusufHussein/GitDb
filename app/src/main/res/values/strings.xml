@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">GitDb</string>
     <string name="action_item_search">Search</string>
-    <string name="action_item_clear_search">Clear</string>
 </resources>
