@@ -4,73 +4,73 @@ import com.google.gson.annotations.SerializedName;
 
 public class Repo {
     @SerializedName("id")
-    private Integer id;
+    private Integer mId;
     @SerializedName("full_name")
-    private String fullName;
+    private String mFullName;
     @SerializedName("description")
-    private String description;
+    private String mDescription;
     @SerializedName("contributors_url")
-    private String contributorsUrl;
+    private String mContributorsUrl;
     @SerializedName("stargazers_count")
-    private Integer stargazersCount;
+    private Integer mStargazersCount;
     @SerializedName("language")
-    private String language;
+    private String mLanguage;
     @SerializedName("forks_count")
-    private Integer forksCount;
+    private Integer mForksCount;
 
     public Integer getId() {
-        return id;
+        return mId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        mId = id;
     }
 
     public String getFullName() {
-        return fullName;
+        return mFullName;
     }
 
     public void setFullName(String fullName) {
-        this.fullName = fullName;
+        mFullName = fullName;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        mDescription = description;
     }
 
     public String getContributorsUrl() {
-        return contributorsUrl;
+        return mContributorsUrl;
     }
 
     public void setContributorsUrl(String contributorsUrl) {
-        this.contributorsUrl = contributorsUrl;
+        mContributorsUrl = contributorsUrl;
     }
 
     public Integer getStargazersCount() {
-        return stargazersCount;
+        return mStargazersCount;
     }
 
     public void setStargazersCount(Integer stargazersCount) {
-        this.stargazersCount = stargazersCount;
+        mStargazersCount = stargazersCount;
     }
 
     public String getLanguage() {
-        return language;
+        return mLanguage;
     }
 
     public void setLanguage(String language) {
-        this.language = language;
+        mLanguage = language;
     }
 
     public Integer getForksCount() {
-        return forksCount;
+        return mForksCount;
     }
 
     public void setForksCount(Integer forksCount) {
-        this.forksCount = forksCount;
+        mForksCount = forksCount;
     }
 }
