@@ -1,9 +1,5 @@
 package com.blink22.android.gitdb;
 
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -31,7 +27,10 @@ public class RepoViewHolder extends RecyclerView.ViewHolder {
     public void bindData(final Repo repo) {
         mDescriptionTextView.setText(repo.getDescription());
         mNameTextView.setText(repo.getFullName());
-        mLanguageTextView.setText(repo.getLanguage());
+        if (repo.getLanguage() != null && repo.getLanguage().length() > 0) {
+            mLanguageTextView.setText(repo.getLanguage());
+            mLanguageTextView.setVisibility(View.VISIBLE);
+        } else mLanguageTextView.setVisibility(View.GONE);
         mStarsTextView.setText(repo.getStargazersCount().toString());
         mForksTextView.setText(repo.getForksCount().toString());
     }
