@@ -1,9 +1,7 @@
 package com.blink22.android.gitdb;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -33,7 +31,9 @@ public class RepoViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.repo_item_container)
     public void onClick(View view) {
         Context context = view.getContext();
-        Intent intent = GitContributorsListActivity.newIntent(view.getContext(),mRepo.getContributorsUrl());
+        Intent intent = GitContributorsListActivity.newIntent(view.getContext()
+                , mRepo.getFullName()
+                , mRepo.getContributorsUrl());
         context.startActivity(intent);
     }
 
