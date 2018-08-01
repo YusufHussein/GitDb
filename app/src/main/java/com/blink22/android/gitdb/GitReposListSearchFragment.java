@@ -25,9 +25,9 @@ import retrofit2.Response;
 
 public class GitReposListSearchFragment extends Fragment {
     private static final String DEFAULT_SEARCH_QUERY = "android";
-    private Call<ReposSearchResult> mSearchReposCall;
     @BindView(R.id.repos_recycler_view)
     RecyclerView mReposRecyclerView;
+    private Call<ReposSearchResult> mSearchReposCall;
 
     public static GitReposListSearchFragment newInstance() {
         return new GitReposListSearchFragment();
@@ -44,7 +44,7 @@ public class GitReposListSearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_git_repos_search,container, false);
+        View view = inflater.inflate(R.layout.fragment_git_repos_search, container, false);
         ButterKnife.bind(this, view);
         mReposRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
@@ -56,6 +56,10 @@ public class GitReposListSearchFragment extends Fragment {
         inflater.inflate(R.menu.fragment_git_repos_search, menu);
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        initializeSearchBar(searchView);
+    }
+
+    private void initializeSearchBar(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -88,8 +92,7 @@ public class GitReposListSearchFragment extends Fragment {
     }
 
     private void fetchRepos(String query) {
-        GitHubService gitHubService = GitHubApiClient.getClient()
-                .create(GitHubService.class);
+        GitHubService gitHubService = GitHubApiClient.getClient().create(GitHubService.class);
         mSearchReposCall = gitHubService.searchRepos(query);
         mSearchReposCall.enqueue(new SearchReposCallbacks());
     }
