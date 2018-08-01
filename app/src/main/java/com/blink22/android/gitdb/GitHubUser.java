@@ -11,6 +11,8 @@ public class GitHubUser {
     private String mAvatarUrl;
     @SerializedName("url")
     private String mProfileUrl;
+    @SerializedName("contributions")
+    private Integer mContributionsCount;
 
     public String getName() {
         return mName;
@@ -42,5 +44,13 @@ public class GitHubUser {
 
     public void setProfileUrl(String profileUrl) {
         mProfileUrl = profileUrl;
+    }
+
+    public Integer getContributionsCount() {
+        return mContributionsCount;
+    }
+
+    public void setContributionsCount(Integer contributionsCount) {
+        mContributionsCount = contributionsCount;
     }
 }

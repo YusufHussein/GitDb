@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GitDb</string>
     <string name="action_item_search">Search</string>
+    <string name="contributions_format">%1$d contributions</string>
 </resources>

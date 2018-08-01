@@ -1,12 +1,12 @@
 package com.blink22.android.gitdb;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,8 @@ import retrofit2.Response;
 
 public class GitContributorsListFragment extends Fragment {
     private static final String CONTRIBUTORS_URL = "CONTRIBUTORS_URL";
-    private static final int NUMBER_OF_AVATARS_PER_LINE = 4;
+    private static final int NUMBER_OF_AVATARS_PER_LINE_PORTRAIT = 4;
+    private static final int NUMBER_OF_AVATARS_PER_LINE_LANDSCAPE = 6;
     @BindView(R.id.contributors_recycler_view)
     RecyclerView mContributorsRecyclerView;
     private Call<List<GitHubUser>> mGetContributorsCall;
@@ -47,10 +48,20 @@ public class GitContributorsListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_git_contributors_list, container, false);
         ButterKnife.bind(this, view);
-        mContributorsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_AVATARS_PER_LINE));
+        GridLayoutManager layoutManager = getGridLayoutManager();
+        mContributorsRecyclerView.setLayoutManager(layoutManager);
         String contributorsUrl = getArguments().getString(CONTRIBUTORS_URL);
         fetchContributors(contributorsUrl);
         return view;
+    }
+
+    @NonNull
+    private GridLayoutManager getGridLayoutManager() {
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return new GridLayoutManager(getActivity(), NUMBER_OF_AVATARS_PER_LINE_PORTRAIT);
+        } else {
+            return new GridLayoutManager(getActivity(), NUMBER_OF_AVATARS_PER_LINE_LANDSCAPE);
+        }
     }
 
     private void fetchContributors(String contributorsUrl) {

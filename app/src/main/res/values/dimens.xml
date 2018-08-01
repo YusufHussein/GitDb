@@ -5,6 +5,8 @@
     <dimen name="repo_item_text_margin">2dp</dimen>
     <dimen name="repo_item_border_width">2dp</dimen>
     <dimen name="repo_item_stats_scale_factor">0.7</dimen>
-    <dimen name="user_avatar_dimen">96dp</dimen>
+    <dimen name="user_avatar_dimen">80dp</dimen>
     <dimen name="user_avatar_margin">8dp</dimen>
+    <dimen name="user_name_size">14sp</dimen>
+    <dimen name="user_contributions_size">10sp</dimen>
 </resources>
