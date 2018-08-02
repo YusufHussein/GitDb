@@ -119,7 +119,10 @@ public class GitReposListSearchFragment extends Fragment {
             ReposSearchResult reposSearchResult = response.body();
             List<Repo> newRepos = reposSearchResult.getRepos();
             mRepoAdapter.setRepos(newRepos);
-            mRealm.executeTransaction(realm -> realm.insertOrUpdate(newRepos));
+            mRealm.executeTransaction(realm -> {
+                realm.delete(Repo.class);
+                realm.insertOrUpdate(newRepos);
+            });
         }
 
         @Override
