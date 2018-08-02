@@ -2,7 +2,11 @@ package com.blink22.android.gitdb;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Repo {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Repo extends RealmObject {
+    @PrimaryKey
     @SerializedName("id")
     private Integer mId;
     @SerializedName("full_name")

@@ -19,6 +19,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,7 +29,9 @@ public class GitReposListSearchFragment extends Fragment {
     private static final String DEFAULT_SEARCH_QUERY = "android";
     @BindView(R.id.repos_recycler_view)
     RecyclerView mReposRecyclerView;
+    private RepoAdapter mRepoAdapter;
     private Call<ReposSearchResult> mSearchReposCall;
+    private Realm mRealm;
 
     public static GitReposListSearchFragment newInstance() {
         return new GitReposListSearchFragment();
@@ -44,9 +48,13 @@ public class GitReposListSearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        mRealm = Realm.getDefaultInstance();
         View view = inflater.inflate(R.layout.fragment_git_repos_search, container, false);
         ButterKnife.bind(this, view);
         mReposRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RealmResults<Repo> repoRealmResults = mRealm.where(Repo.class).findAllAsync();
+        mRepoAdapter = new RepoAdapter(mRealm.copyFromRealm(repoRealmResults));
+        mReposRecyclerView.setAdapter(mRepoAdapter);
         return view;
     }
 
@@ -86,9 +94,7 @@ public class GitReposListSearchFragment extends Fragment {
             searchView.setQuery(query, false);
             searchView.setIconified(false);
             fetchRepos(query);
-        } else {
-            fetchRepos(DEFAULT_SEARCH_QUERY);
-        }
+        } else fetchRepos(DEFAULT_SEARCH_QUERY);
     }
 
     private void fetchRepos(String query) {
@@ -100,6 +106,10 @@ public class GitReposListSearchFragment extends Fragment {
     @Override
     public void onDestroyView() {
         if (mSearchReposCall != null && mSearchReposCall.isExecuted()) mSearchReposCall.cancel();
+        if (mRealm != null) {
+            mRealm.close();
+            mRealm = null;
+        }
         super.onDestroyView();
     }
 
@@ -107,9 +117,9 @@ public class GitReposListSearchFragment extends Fragment {
         @Override
         public void onResponse(Call<ReposSearchResult> call, Response<ReposSearchResult> response) {
             ReposSearchResult reposSearchResult = response.body();
-            List<Repo> repos = reposSearchResult.getRepos();
-            RepoAdapter repoAdapter = new RepoAdapter(repos);
-            mReposRecyclerView.setAdapter(repoAdapter);
+            List<Repo> newRepos = reposSearchResult.getRepos();
+            mRepoAdapter.setRepos(newRepos);
+            mRealm.executeTransaction(realm -> realm.insertOrUpdate(newRepos));
         }
 
         @Override
