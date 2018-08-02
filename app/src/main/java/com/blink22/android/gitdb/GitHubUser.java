@@ -9,7 +9,7 @@ public class GitHubUser {
     private Integer mId;
     @SerializedName("avatar_url")
     private String mAvatarUrl;
-    @SerializedName("url")
+    @SerializedName("html_url")
     private String mProfileUrl;
     @SerializedName("contributions")
     private Integer mContributionsCount;
