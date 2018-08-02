@@ -2,6 +2,7 @@ package com.blink22.android.gitdb;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,10 +33,15 @@ public class GitHubUserViewHolder extends RecyclerView.ViewHolder {
         mUser = user;
         Picasso.get()
                 .load(mUser.getAvatarUrl())
+                .placeholder(R.drawable.user_placeholder)
                 .transform(new RoundedCornersTransform())
                 .into(mUserAvatarImageView);
         mNameTextView.setText(mUser.getName());
-        mContributionsTextView.setText(mContributionsTextView.getContext().getString(R.string.contributions_format, mUser.getContributionsCount()));
+        Resources res = mContributionsTextView.getContext().getResources();
+        String quantityString = res.getQuantityString(R.plurals.contributions_plural_format
+                , mUser.getContributionsCount()
+                , mUser.getContributionsCount());
+        mContributionsTextView.setText(quantityString);
     }
 
     @OnClick(R.id.user_item_container)
