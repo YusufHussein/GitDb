@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GitDb</string>
+    <string name="action_item_search">Search</string>
 </resources>
